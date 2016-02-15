@@ -1,0 +1,39 @@
+<div id="editor">
+    <div class="project_editor_instance">
+        <h2 style="color: #9a9a9a">{{ way }}</h2>
+        <div>
+            {% for project,task_list in project_dict %}
+                <br/>
+                <h2 class="project_header section_header">
+                    <span>{{ project }}</span>
+                </h2>
+                <ul class="items">
+                    {% for task in task_list %}
+                        <li class="task_item">
+                            <div class="invisible_space"></div>
+                            <table cellpadding="0" cellspacing="0">
+                                <tbody>
+                                <tr>
+                                    <td class="checker">
+                                    </td>
+                                    <td class="text_cursor content task_content_item">
+                                        <div class="text_cursor div_due_date">
+                                        <span class="date">
+                                            {{ task.target_date }}
+                                        </span>
+                                        </div>
+                                    <span class="text">
+                                        {{ task.content }}
+                                    </span>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+

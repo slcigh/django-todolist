@@ -1,0 +1,74 @@
+<div id="editor">
+    <div class="project_editor_instance">
+        <div>
+            <h2 class="project_header section_header">
+                <span>{{ project_name }}</span>
+            </h2>
+            <ul class="items">
+                {% for task in task_list %}
+                    <li class="task_item">
+                        <div class="invisible_space"></div>
+                        <table cellpadding="0" cellspacing="0">
+                            <tbody>
+                            <tr>
+                                <td class="checker">
+                                    <a href="{% url 'change_task_finish' project_slug task.id %}?next={% url 'index' %}?p_name={{ project_slug }}">
+                                        <div class="amicheckbox">
+                                        </div>
+                                    </a>
+                                </td>
+                                <td class="text_cursor content task_content_item">
+                                    <div class="text_cursor div_due_date">
+                                        <span class="date finish_{{ task.is_finished }}">
+                                            {{ task.target_date }}
+                                            <a id="del_task"
+                                               href="{% url 'delete_task' project_slug task.id %}?next={% url 'index' %}?p_name={{ project_slug }}">
+                                                &#10006;
+                                            </a>
+                                        </span>
+                                    </div>
+                                    <span class="text editable_textarea_{{ task.id }} finish_{{ task.is_finished }}"
+                                          id="{{ project_slug }}_{{ task.id }}">
+                                        {{ task.content }}
+                                    </span>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="controller">
+            <form id="todo_form" method="post" enctype="multipart/form-data"
+                  action="{% url 'add_task' project_slug %}?next={% url 'index' %}?p_name={{ project_slug }}">
+                {% csrf_token %}
+                {% for hidden in form.hidden_fields %}
+                    {{ hidden }}
+                {% endfor %}
+
+                {% for field in form.visible_fields %}
+                    {{ field.errors }}
+                    {{ field.help_text }}
+                    {{ field }}
+                {% endfor %}
+                <input type="submit" name="submit" value="submit"/>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $("#id_target_date").datepicker();
+        {% for task in task_list %}
+            $(".editable_textarea_{{ task.id }}").editable("{% url 'edit_task' %}", {
+                submitdata: {csrfmiddlewaretoken: "{{ csrf_token }}"},
+                select: true,
+                style: "inherit",
+                submit: 'OK',
+                cancel: 'cancel'
+            });
+        {% endfor %}
+    });
+</script>
